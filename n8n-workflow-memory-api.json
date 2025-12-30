@@ -220,6 +220,34 @@
         },
         "options": {}
       }
+    },
+    {
+      "id": "webhook-delete",
+      "name": "Delete Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [0, 1200],
+      "webhookId": "memory-delete",
+      "parameters": {
+        "path": "memory-delete",
+        "httpMethod": "POST",
+        "responseMode": "lastNode",
+        "responseData": "allEntries"
+      }
+    },
+    {
+      "id": "http-delete",
+      "name": "Delete Entity",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [300, 1200],
+      "parameters": {
+        "method": "DELETE",
+        "url": "=https://memory-mcp.45black-limited.workers.dev/api/entities/{{ encodeURIComponent($json.body.name) }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      }
     }
   ],
   "connections": {
@@ -240,6 +268,9 @@
     },
     "Relations Webhook": {
       "main": [[{"node": "Create Relation", "type": "main", "index": 0}]]
+    },
+    "Delete Webhook": {
+      "main": [[{"node": "Delete Entity", "type": "main", "index": 0}]]
     }
   },
   "settings": {"executionOrder": "v1"}

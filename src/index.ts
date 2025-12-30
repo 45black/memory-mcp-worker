@@ -215,6 +215,36 @@ app.post('/api/relations', async (c) => {
   }
 });
 
+// Delete an entity and its observations/relations
+app.delete('/api/entities/:name', async (c) => {
+  const name = decodeURIComponent(c.req.param('name'));
+
+  const entity = await c.env.DB.prepare(
+    'SELECT id FROM entities WHERE name = ?'
+  ).bind(name).first();
+
+  if (!entity) {
+    return c.json({ error: 'Entity not found' }, 404);
+  }
+
+  // Delete observations first (foreign key constraint)
+  await c.env.DB.prepare(
+    'DELETE FROM observations WHERE entity_id = ?'
+  ).bind(entity.id).run();
+
+  // Delete relations where this entity is involved
+  await c.env.DB.prepare(
+    'DELETE FROM relations WHERE from_entity_id = ? OR to_entity_id = ?'
+  ).bind(entity.id, entity.id).run();
+
+  // Delete the entity
+  await c.env.DB.prepare(
+    'DELETE FROM entities WHERE id = ?'
+  ).bind(entity.id).run();
+
+  return c.json({ success: true, deleted: name });
+});
+
 // Search entities and observations
 app.get('/api/search', async (c) => {
   const query = c.req.query('q');
