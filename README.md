@@ -204,6 +204,13 @@ curl -X POST https://your-n8n-instance/webhook/memory-observations \
   -d '{"name": "My Project", "contents": ["New observation 1", "New observation 2"]}'
 ```
 
+**Create Relation** - POST to `/webhook/memory-relations`:
+```bash
+curl -X POST https://your-n8n-instance/webhook/memory-relations \
+  -H "Content-Type: application/json" \
+  -d '{"from": "Project A", "to": "Project B", "relationType": "depends_on"}'
+```
+
 ## Development
 
 ```bash
