@@ -138,6 +138,43 @@
         },
         "options": {}
       }
+    },
+    {
+      "id": "webhook-observations",
+      "name": "Observations Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [0, 800],
+      "webhookId": "memory-observations",
+      "parameters": {
+        "path": "memory-observations",
+        "httpMethod": "POST",
+        "responseMode": "lastNode",
+        "responseData": "allEntries"
+      }
+    },
+    {
+      "id": "http-observations",
+      "name": "Add Observations",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [300, 800],
+      "parameters": {
+        "method": "POST",
+        "url": "=https://memory-mcp.45black-limited.workers.dev/api/entities/{{ encodeURIComponent($json.body.name) }}/observations",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "contents",
+              "value": "={{ $json.body.contents }}"
+            }
+          ]
+        },
+        "options": {}
+      }
     }
   ],
   "connections": {
@@ -152,6 +189,9 @@
     },
     "Create Webhook": {
       "main": [[{"node": "Create Entity", "type": "main", "index": 0}]]
+    },
+    "Observations Webhook": {
+      "main": [[{"node": "Add Observations", "type": "main", "index": 0}]]
     }
   },
   "settings": {"executionOrder": "v1"}

@@ -197,6 +197,13 @@ curl -X POST https://your-n8n-instance/webhook/memory-create \
   -d '{"name": "My Project", "entityType": "Project", "observations": ["First observation"]}'
 ```
 
+**Add Observations** - POST to `/webhook/memory-observations`:
+```bash
+curl -X POST https://your-n8n-instance/webhook/memory-observations \
+  -H "Content-Type: application/json" \
+  -d '{"name": "My Project", "contents": ["New observation 1", "New observation 2"]}'
+```
+
 ## Development
 
 ```bash
