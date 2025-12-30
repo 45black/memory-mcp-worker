@@ -190,6 +190,13 @@ curl -X POST https://your-n8n-instance/webhook/memory-graph \
   -d '{}'
 ```
 
+**Create Entity** - POST to `/webhook/memory-create`:
+```bash
+curl -X POST https://your-n8n-instance/webhook/memory-create \
+  -H "Content-Type: application/json" \
+  -d '{"name": "My Project", "entityType": "Project", "observations": ["First observation"]}'
+```
+
 ## Development
 
 ```bash

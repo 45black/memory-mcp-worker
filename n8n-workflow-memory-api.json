@@ -93,6 +93,51 @@
         "genericAuthType": "httpHeaderAuth",
         "options": {}
       }
+    },
+    {
+      "id": "webhook-create",
+      "name": "Create Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [0, 600],
+      "webhookId": "memory-create",
+      "parameters": {
+        "path": "memory-create",
+        "httpMethod": "POST",
+        "responseMode": "lastNode",
+        "responseData": "allEntries"
+      }
+    },
+    {
+      "id": "http-create",
+      "name": "Create Entity",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [300, 600],
+      "parameters": {
+        "method": "POST",
+        "url": "https://memory-mcp.45black-limited.workers.dev/api/entities",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "name",
+              "value": "={{ $json.body.name }}"
+            },
+            {
+              "name": "entityType",
+              "value": "={{ $json.body.entityType }}"
+            },
+            {
+              "name": "observations",
+              "value": "={{ $json.body.observations }}"
+            }
+          ]
+        },
+        "options": {}
+      }
     }
   ],
   "connections": {
@@ -104,6 +149,9 @@
     },
     "Graph Webhook": {
       "main": [[{"node": "Get Full Graph", "type": "main", "index": 0}]]
+    },
+    "Create Webhook": {
+      "main": [[{"node": "Create Entity", "type": "main", "index": 0}]]
     }
   },
   "settings": {"executionOrder": "v1"}
