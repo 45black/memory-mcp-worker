@@ -215,6 +215,29 @@ app.post('/api/relations', async (c) => {
   }
 });
 
+// Delete a relation
+app.delete('/api/relations', async (c) => {
+  const { from, to, relationType } = await c.req.json();
+
+  const fromEntity = await c.env.DB.prepare(
+    'SELECT id FROM entities WHERE name = ?'
+  ).bind(from).first();
+
+  const toEntity = await c.env.DB.prepare(
+    'SELECT id FROM entities WHERE name = ?'
+  ).bind(to).first();
+
+  if (!fromEntity || !toEntity) {
+    return c.json({ error: 'Entity not found' }, 404);
+  }
+
+  const result = await c.env.DB.prepare(
+    'DELETE FROM relations WHERE from_entity_id = ? AND to_entity_id = ? AND relation_type = ?'
+  ).bind(fromEntity.id, toEntity.id, relationType).run();
+
+  return c.json({ success: true, deleted: result.meta.changes > 0 });
+});
+
 // Delete an entity and its observations/relations
 app.delete('/api/entities/:name', async (c) => {
   const name = decodeURIComponent(c.req.param('name'));

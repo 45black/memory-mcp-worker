@@ -218,6 +218,13 @@ curl -X POST https://your-n8n-instance/webhook/memory-delete \
   -d '{"name": "Entity Name"}'
 ```
 
+**Delete Relation** - POST to `/webhook/memory-delete-relation`:
+```bash
+curl -X POST https://your-n8n-instance/webhook/memory-delete-relation \
+  -H "Content-Type: application/json" \
+  -d '{"from": "Entity A", "to": "Entity B", "relationType": "relation_type"}'
+```
+
 ## Development
 
 ```bash

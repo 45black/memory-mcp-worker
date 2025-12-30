@@ -248,6 +248,51 @@
         "genericAuthType": "httpHeaderAuth",
         "options": {}
       }
+    },
+    {
+      "id": "webhook-delete-relation",
+      "name": "Delete Relation Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [0, 1400],
+      "webhookId": "memory-delete-relation",
+      "parameters": {
+        "path": "memory-delete-relation",
+        "httpMethod": "POST",
+        "responseMode": "lastNode",
+        "responseData": "allEntries"
+      }
+    },
+    {
+      "id": "http-delete-relation",
+      "name": "Delete Relation",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [300, 1400],
+      "parameters": {
+        "method": "DELETE",
+        "url": "https://memory-mcp.45black-limited.workers.dev/api/relations",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "from",
+              "value": "={{ $json.body.from }}"
+            },
+            {
+              "name": "to",
+              "value": "={{ $json.body.to }}"
+            },
+            {
+              "name": "relationType",
+              "value": "={{ $json.body.relationType }}"
+            }
+          ]
+        },
+        "options": {}
+      }
     }
   ],
   "connections": {
@@ -271,6 +316,9 @@
     },
     "Delete Webhook": {
       "main": [[{"node": "Delete Entity", "type": "main", "index": 0}]]
+    },
+    "Delete Relation Webhook": {
+      "main": [[{"node": "Delete Relation", "type": "main", "index": 0}]]
     }
   },
   "settings": {"executionOrder": "v1"}
