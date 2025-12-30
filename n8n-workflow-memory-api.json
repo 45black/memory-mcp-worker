@@ -1,0 +1,110 @@
+{
+  "name": "Memory API",
+  "nodes": [
+    {
+      "id": "webhook-search",
+      "name": "Search Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [0, 0],
+      "webhookId": "memory-search",
+      "parameters": {
+        "path": "memory-search",
+        "httpMethod": "POST",
+        "responseMode": "lastNode",
+        "responseData": "allEntries"
+      }
+    },
+    {
+      "id": "http-search",
+      "name": "Search Memory",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [300, 0],
+      "parameters": {
+        "method": "GET",
+        "url": "https://memory-mcp.45black-limited.workers.dev/api/search",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "q",
+              "value": "={{ $json.body.query }}"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "webhook-entity",
+      "name": "Entity Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [0, 200],
+      "webhookId": "memory-entity",
+      "parameters": {
+        "path": "memory-entity",
+        "httpMethod": "POST",
+        "responseMode": "lastNode",
+        "responseData": "allEntries"
+      }
+    },
+    {
+      "id": "http-entity",
+      "name": "Get Entity",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [300, 200],
+      "parameters": {
+        "method": "GET",
+        "url": "=https://memory-mcp.45black-limited.workers.dev/api/entities/{{ encodeURIComponent($json.body.name) }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      }
+    },
+    {
+      "id": "webhook-graph",
+      "name": "Graph Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [0, 400],
+      "webhookId": "memory-graph",
+      "parameters": {
+        "path": "memory-graph",
+        "httpMethod": "POST",
+        "responseMode": "lastNode",
+        "responseData": "allEntries"
+      }
+    },
+    {
+      "id": "http-graph",
+      "name": "Get Full Graph",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [300, 400],
+      "parameters": {
+        "method": "GET",
+        "url": "https://memory-mcp.45black-limited.workers.dev/api/graph",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      }
+    }
+  ],
+  "connections": {
+    "Search Webhook": {
+      "main": [[{"node": "Search Memory", "type": "main", "index": 0}]]
+    },
+    "Entity Webhook": {
+      "main": [[{"node": "Get Entity", "type": "main", "index": 0}]]
+    },
+    "Graph Webhook": {
+      "main": [[{"node": "Get Full Graph", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {"executionOrder": "v1"}
+}

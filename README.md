@@ -155,28 +155,40 @@ await fetch(`${BASE_URL}/api/entities/Household%20Planner/observations`, {
 
 ## n8n Integration
 
-An n8n workflow is included for querying the Memory API via webhook.
+An n8n workflow is included for querying the Memory API via webhooks.
 
 ### Setup
 
-1. Import `n8n-workflow-memory-search.json` into n8n
+1. Import `n8n-workflow-memory-api.json` into n8n
 2. Create a "Header Auth" credential:
    - Name: `Memory MCP API Key`
    - Header Name: `X-API-Key`
    - Header Value: `YOUR_API_KEY`
-3. Assign the credential to the "Search Memory API" node
+3. Assign the credential to all three HTTP Request nodes
 4. Activate the workflow
 
-### Usage
+### Endpoints
 
-**Webhook**: POST to `/webhook/memory-search`:
+**Search** - POST to `/webhook/memory-search`:
 ```bash
 curl -X POST https://your-n8n-instance/webhook/memory-search \
   -H "Content-Type: application/json" \
   -d '{"query": "Household Planner"}'
 ```
 
-Returns search results from the Memory API.
+**Get Entity** - POST to `/webhook/memory-entity`:
+```bash
+curl -X POST https://your-n8n-instance/webhook/memory-entity \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Household Planner"}'
+```
+
+**Get Full Graph** - POST to `/webhook/memory-graph`:
+```bash
+curl -X POST https://your-n8n-instance/webhook/memory-graph \
+  -H "Content-Type: application/json" \
+  -d '{}'
+```
 
 ## Development
 
